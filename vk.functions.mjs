@@ -8,9 +8,9 @@ async function doesExists(checkDomain) {
         let vkr = await vk.api.groups.getById({
             group_id: checkDomain
         });
-        return vkr;
+        return vkr.toString();
     } catch (e) {
-        return e
+        return e.toString()
     }
 
 }
