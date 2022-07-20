@@ -87,10 +87,9 @@ bot.on(/^\/connect (.+)$/, async (msg, props) => {
             await bd.bufferManager(membersJoined, membersLeft, text, secondUserChatId)
 
         } else {
-            let members = await vk.connect(text)
-            for (let i = 0; i < members.length; i++) {
-                await models.Member.create({memberDomain: text, memberVkId: members[i].toString()})
-            }
+            let membersFresh = await vk.connect(text)
+            let members = membersFresh.map(item => {return {memberDomain: text, memberVkId: item.toString()}})
+            await models.Member.bulkCreate(members)
         }
         await models.Domain.create({domainId: text, userChatId: chatId})
         return msg.reply.text(`Группа ${text} подключена)`)
