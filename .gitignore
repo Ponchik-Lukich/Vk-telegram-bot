@@ -1,5 +1,6 @@
 .vercel
 .env
+.my-session
 .idea
 # Project exclude paths
 /node_modules/
