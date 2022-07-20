@@ -34,7 +34,7 @@ async function makeResult(membersJoined, membersLeft, domain) {
 
 bot.on('/start', async msg => {
     try {
-        const chatId = msg.chat.id
+        const chatId = await msg.chat.id
         await models.User.create({chatId})
 
         return msg.reply.text(startAnswer + commands)
@@ -44,8 +44,8 @@ bot.on('/start', async msg => {
 })
 
 bot.on(/^\/delete (.+)$/, async (msg, props) => {
-    const text = props.match[1];
-    const chatId = msg.chat.id
+    const text = await props.match[1];
+    const chatId = await msg.chat.id
     if (await models.Domain.findOne({where: {domainId: text, userChatId: chatId}})) {
         const userCount = (await models.Domain.findAll({where: {domainId: text}})).length
         if (userCount === 2) {
@@ -64,8 +64,8 @@ bot.on('/bruh', async msg => {
 })
 
 bot.on(/^\/connect (.+)$/, async (msg, props) => {
-    const text = props.match[1];
-    const chatId = msg.chat.id
+    const text = await props.match[1];
+    const chatId = await msg.chat.id
     console.log(text)
     console.log(chatId)
     if (!(await vk.doesExists(text))) return msg.reply.text(groupNotExists)
@@ -99,7 +99,7 @@ bot.on(/^\/connect (.+)$/, async (msg, props) => {
 });
 
 bot.on('/info', async msg => {
-    const chatId = msg.chat.id
+    const chatId = await msg.chat.id
     const rows = await models.Domain.findAll({where: {userChatId: chatId}});
     if (rows.length === 0) return msg.reply.text(groupsNotConnected);
     else {
@@ -116,8 +116,8 @@ bot.on('/commands', async msg => {
 });
 
 bot.on(/^\/check (.+)$/, async (msg, props) => {
-    const chatId = msg.chat.id
-    const checkDomain = props.match[1];
+    const chatId = await msg.chat.id
+    const checkDomain = await props.match[1];
     const domains = await models.Domain.findAll({where: {domainId: checkDomain}})
     let secondUserChatId = ''
     if (domains.length === 0) return msg.reply.text(groupNotFound)
