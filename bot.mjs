@@ -66,7 +66,9 @@ bot.on('/bruh', async msg => {
 bot.on(/^\/connect (.+)$/, async (msg, props) => {
     const text = props.match[1];
     const chatId = msg.chat.id
-    // if (!(await vk.doesExists(text))) return msg.reply.text(groupNotExists)
+    console.log(text)
+    console.log(chatId)
+    if (!(await vk.doesExists(text))) return msg.reply.text(groupNotExists)
 
     if (await models.Domain.findOne({where: {domainId: text, userChatId: chatId}})) {
         return msg.reply.text(groupAlreadyConnected)
