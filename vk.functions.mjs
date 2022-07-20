@@ -4,7 +4,7 @@ async function doesExists(checkDomain) {
     const vk = await easyvk({
         username: process.env.USERNAME,
         password: process.env.PASSWORD,
-        sessionFile: './.my-session'
+        token: process.env.VK_TOKEN
     })
     try {
         let vkr = await vk.call('groups.getById', {
@@ -21,7 +21,7 @@ async function connect(checkDomain) {
     const vk = await easyvk({
         username: process.env.USERNAME,
         password: process.env.PASSWORD,
-        sessionFile: './.my-session'
+        token: process.env.VK_TOKEN
     })
     let vkr = await vk.call('groups.getMembers', {
         group_id: checkDomain
