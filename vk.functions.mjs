@@ -2,7 +2,7 @@ import {VK} from 'vk-io'
 
 async function doesExists(checkDomain) {
     try {
-        const vk = new VK({
+        const vk = await new VK({
             token: process.env.VK_TOKEN
         });
         let vkr = await vk.api.groups.getById({
