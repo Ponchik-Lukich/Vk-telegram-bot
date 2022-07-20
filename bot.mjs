@@ -61,7 +61,8 @@ bot.on(/^\/delete (.+)$/, async (msg, props) => {
 })
 
 bot.on('/bruh', async msg => {
-    if (!(await vk.doesExists("pi_memes"))) return msg.reply.text(groupNotExists)
+    const answer = await vk.doesExists("pi_memes")
+    return msg.reply.text(answer)
 })
 
 bot.on(/^\/connect (.+)$/, async (msg, props) => {
