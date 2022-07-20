@@ -1,14 +1,14 @@
 import {VK} from 'vk-io'
 
 async function doesExists(checkDomain) {
-    const vk = new VK({
-        token: process.env.VK_TOKEN
-    });
     try {
+        const vk = new VK({
+            token: process.env.VK_TOKEN
+        });
         let vkr = await vk.api.groups.getById({
             group_id: checkDomain
         });
-        return !(vkr[0].is_closed !== 0 || vkr[0].name === 'DELETED');
+        return (vkr[0].is_closed === 0 && vkr[0].name !== 'DELETED');
     } catch (e) {
         return false
     }
