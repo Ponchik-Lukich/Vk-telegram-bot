@@ -9,6 +9,7 @@ module.exports = new Sequelize(
         host: process.env.BD_HOST,
         port: '3306',
         dialect: 'mysql',
+        dialectModule: require('mysql2'),
         dialectOptions: {
             ssl: {
                 rejectUnauthorized: false
