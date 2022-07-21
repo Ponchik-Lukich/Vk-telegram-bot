@@ -24,10 +24,10 @@ async function makeResult(membersJoined, membersLeft, domain) {
     if (membersJoined.length === 0 && membersLeft.length === 0) return noChanges
     let message = ''
     for (let i = 0; i < membersLeft.length; i++) {
-        message += 'https://vk.com/id' + membersLeft[i].toString() + ` - сбежал из https://vk.com/${domain}\n`;
+        message += 'https://vk.com/id' + membersLeft[i].toString() + ` - сбежал(а) из https://vk.com/${domain}\n`;
     }
     for (let j = 0; j < membersJoined.length; j++) {
-        message += 'https://vk.com/id' + membersJoined[j].toString() + ` - пришёл в https://vk.com/${domain}\n`;
+        message += 'https://vk.com/id' + membersJoined[j].toString() + ` - вступил(а) в https://vk.com/${domain}\n`;
     }
     return message
 }
