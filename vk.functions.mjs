@@ -1,14 +1,16 @@
-import {VK} from 'vk-io'
+import easyvk from "easyvk";
 
 async function doesExists(checkDomain) {
+    const vk = await easyvk({
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD,
+        save_session: false
+    })
     try {
-        const vk = new VK({
-            token: process.env.VK_TOKEN
-        });
-        let vkr = await vk.api.groups.getById({
+        let vkr = await vk.call('groups.getById', {
             group_id: checkDomain
         });
-        return vkr.toString();
+        return vkr.toString()
     } catch (e) {
         return e.toString()
     }
@@ -16,10 +18,12 @@ async function doesExists(checkDomain) {
 }
 
 async function connect(checkDomain) {
-    const vk = new VK({
-        token: process.env.VK_TOKEN
-    });
-    let vkr = await vk.api.groups.getMembers({
+    const vk = await easyvk({
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD,
+        save_session: false
+    })
+    let vkr = await vk.call('groups.getMembers', {
         group_id: checkDomain
     });
 
@@ -29,7 +33,7 @@ async function connect(checkDomain) {
 
     while (offset < count) {
         try {
-            let vkr = await vk.api.groups.getMembers({
+            let vkr = await vk.call('groups.getMembers', {
                 group_id: checkDomain,
                 offset: offset,
                 count: 1000
