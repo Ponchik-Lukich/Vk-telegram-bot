@@ -60,7 +60,7 @@ bot.on(/^\/delete (.+)$/, async (msg, props) => {
     }
 })
 
-bot.on('/^\\/bruh (.+)$/', async msg => {
+bot.on('/^\\/bruh (.+)$/', async msg => {            //Unnecessary function to check
     const text = props.match[1];
     const answer = await vk.doesExists(text)
     return msg.reply.text(answer)
@@ -151,6 +151,14 @@ bot.on(/^\/check (.+)$/, async (msg, props) => {
                 }
             }
             await models.bufferMember.destroy({where: {bufMemberDomain: checkDomain, userChatId: chatId}});
+        }
+    }
+    else {
+        for (let i = 0; i < membersJoined.length; i++) {
+            await models.Member.create({memberDomain: checkDomain, memberVkId: membersJoined[i].toString()})
+        }
+        for (let j = 0; j < membersLeft.length; j++) {
+            await models.Member.destroy({where: {memberDomain: checkDomain, memberVkId: membersLeft[j].toString()}})
         }
     }
 
