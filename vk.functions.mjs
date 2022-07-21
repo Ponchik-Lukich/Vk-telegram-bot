@@ -10,9 +10,9 @@ async function doesExists(checkDomain) {
         let vkr = await vk.call('groups.getById', {
             group_id: checkDomain
         });
-        return vkr.toString()
+        return (vkr[0].is_closed === 0 && vkr[0].name !== 'DELETED');
     } catch (e) {
-        return e.toString()
+        return false
     }
 
 }

@@ -60,8 +60,9 @@ bot.on(/^\/delete (.+)$/, async (msg, props) => {
     }
 })
 
-bot.on('/bruh', async msg => {
-    const answer = await vk.doesExists("pi_memes")
+bot.on('/^\\/bruh (.+)$/', async msg => {
+    const text = props.match[1];
+    const answer = await vk.doesExists(text)
     return msg.reply.text(answer)
 })
 
