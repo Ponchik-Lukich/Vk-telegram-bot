@@ -88,7 +88,6 @@ bot.on(/^\/connect (.+)$/, async (msg, props) => {
                 }
             })).chatId
             await bd.bufferManager(membersJoined, membersLeft, text, secondUserChatId)
-
         } else {
             let membersFresh = await vk.connect(text)
             let members = membersFresh.map(item => {return {memberDomain: text, memberVkId: item.toString()}})
@@ -127,7 +126,6 @@ bot.on(/^\/check (.+)$/, async (msg, props) => {
             secondUserChatId = domains[i].userChatId
         }
     }
-
     let memberArray = await vk.connect(checkDomain);
     let oldMemberArray = await bd.findMembers(checkDomain)
     let membersJoined = memberArray.filter(x => !oldMemberArray.includes(x))
@@ -154,11 +152,13 @@ bot.on(/^\/check (.+)$/, async (msg, props) => {
         }
     }
     else {
-        for (let i = 0; i < membersJoined.length; i++) {
-            await models.Member.create({memberDomain: checkDomain, memberVkId: membersJoined[i].toString()})
+        if (membersJoined.length !== 0) {
+            let membersJWrite = membersJoined.map(item => {return {memberDomain: checkDomain, memberVkId: item.toString()}})
+            await models.Member.bulkCreate(membersJWrite)
         }
-        for (let j = 0; j < membersLeft.length; j++) {
-            await models.Member.destroy({where: {memberDomain: checkDomain, memberVkId: membersLeft[j].toString()}})
+        if (membersLeft.length !== 0) {
+            let membersLDestroy = membersLeft.map(item => {return {memberDomain: checkDomain, memberVkId: item.toString()}})
+            await models.Member.destroy({where: {[Op.or]: membersLDestroy}})
         }
     }
 

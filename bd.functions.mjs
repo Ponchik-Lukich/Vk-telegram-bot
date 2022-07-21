@@ -1,4 +1,5 @@
 import models from "./models/models.js";
+import {Op} from "sequelize";
 
 async function findMembers(checkDomain) {
     const users = await models.Member.findAll({where: {memberDomain: checkDomain}});
@@ -10,44 +11,17 @@ async function findMembers(checkDomain) {
 }
 
 async function bufferManager(membersJoined, membersLeft, domain, secondUserChatId) {
-    for (let i = 0; i < membersJoined.length; i++) {
-        await models.Member.create({memberDomain: domain, memberVkId: membersJoined[i].toString()})
-        if ((await models.bufferMember.findAll({
-            where: {
-                bufMemberDomain: domain,
-                bufMemberVkId: membersJoined[i].toString(),
-                userChatId: secondUserChatId
-            }
-        })).length === 0) {
-            await models.bufferMember.create({
-                bufMemberDomain: domain,
-                bufMemberVkId: membersJoined[i].toString(),
-                userChatId: secondUserChatId,
-                action: 1
-            })
-        } else {
-            await models.bufferMember.update({action: 1}, {where: {action: 0}})
-        }
-
+    if (membersJoined.length !== 0) {
+        let membersJWrite = membersJoined.map(item => {return {memberDomain: domain, memberVkId: item.toString()}})
+        let bufferMembersJWrite = membersJoined.map(item => {return {bufMemberDomain: domain, bufMemberVkId: item.toString(), userChatId: secondUserChatId, action: 1}})
+        await models.Member.bulkCreate(membersJWrite)
+        await models.bufferMember.bulkCreate(bufferMembersJWrite, {updateOnDuplicate: ["bufMemberDomain", "bufMemberVkId", "userChatId"]})
     }
-    for (let j = 0; j < membersLeft.length; j++) {
-        await models.Member.destroy({where: {memberDomain: domain, memberVkId: membersLeft[j].toString()}})
-        if ((await models.bufferMember.findAll({
-            where: {
-                bufMemberDomain: domain,
-                bufMemberVkId: membersLeft[j].toString(),
-                userChatId: secondUserChatId
-            }
-        })).length === 0) {
-            await models.bufferMember.create({
-                bufMemberDomain: domain,
-                bufMemberVkId: membersLeft[j].toString(),
-                userChatId: secondUserChatId,
-                action: 0
-            })
-        } else {
-            await models.bufferMember.update({action: 0}, {where: {action: 1}})
-        }
+    if (membersLeft.length !== 0) {
+        let membersLDestroy = membersLeft.map(item => {return {memberDomain: domain, memberVkId: item.toString()}})
+        let bufferMembersLWrite = membersLeft.map(item => {return {bufMemberDomain: domain, bufMemberVkId: item.toString(), userChatId: secondUserChatId, action: 0}})
+        await models.Member.destroy({where: {[Op.or]: membersLDestroy}})
+        await models.bufferMember.bulkCreate(bufferMembersLWrite, {updateOnDuplicate: ["bufMemberDomain", "bufMemberVkId", "userChatId"]})
     }
 }
 
