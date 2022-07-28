@@ -171,5 +171,4 @@ bot.on('text', msg => {
     return msg.reply.text('Я тебя не понимаю(');
 })
 
-
 export default bot
