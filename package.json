@@ -11,7 +11,7 @@
     "i": "^0.3.7",
     "mysql2": "^2.3.3",
     "npm": "^8.14.0",
-    "sequelize": "^6.21.3",
+    "sequelize": "^6.25.1",
     "telebot": "latest",
     "vk-io": "^4.6.0"
   },
